@@ -8,6 +8,10 @@ import org.springframework.security.core.userdetails.User;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/*
+Die Verwendung eines DTOs hilft dabei, die Domänenlogik von der Darstellungsebene zu trennen.
+Dadurch werden Sicherheits- und Performanceaspekte verbessert, da nur die relevanten Daten übertragen werden.
+ */
 /**
  * DTO for {@link com.example.smartmetergateway.entities.Measurement}
  */
