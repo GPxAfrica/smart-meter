@@ -15,8 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/*
+Diese Klasse implementiert das Interface UserDetailsService, welches von Spring Security bereitgestellt wird.
+Sie ermöglicht es, Benutzerinformationen zu laden und in ein UserDetails-Objekt zu konvertieren.
+Dadurch kann Spring Security die Authentifizierung und Autorisierung von Benutzern durchführen.
+ */
 @Service
-@Transactional
+@Transactional // Sorgt dafür, dass alle Methoden in dieser Klasse in einer Transaktion ausgeführt werden, was bei Datenbankoperationen wichtig ist.
 public class MyUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -25,6 +30,9 @@ public class MyUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    /*
+    Diese Methode wird aufgerufen, wenn ein Benutzer sich anmeldet.
+     */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SmartMeterUser smartmeterUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + username));
         boolean accountNonExpired = true;
@@ -32,10 +40,17 @@ public class MyUserDetailsService implements UserDetailsService {
         boolean accountNonLocked = true;
 
         return new org.springframework.security.core.userdetails.User(
-                smartmeterUser.getUsername(), smartmeterUser.getPassword(), smartmeterUser.getEnabled(), accountNonExpired,
-                credentialsNonExpired, accountNonLocked, getAuthorities(smartmeterUser.getAuthorities()));
+                smartmeterUser.getUsername(),
+                smartmeterUser.getPassword(),
+                smartmeterUser.getEnabled(),
+                accountNonExpired,
+                credentialsNonExpired,
+                accountNonLocked,
+                getAuthorities(smartmeterUser.getAuthorities())
+        );
     }
 
+    // Diese Methode konvertiert die Rollen des Benutzers in eine Liste von GrantedAuthority-Objekten, die von Spring Security benötigt wird.
     private static List<GrantedAuthority> getAuthorities(Set<Authority> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Authority role : roles) {
