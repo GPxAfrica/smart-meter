@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>All Smartmeters</title>
+</head>
+<body>
+<h1>All Smartmeters</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Last Measurement</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- TODO: SmartMeters werden nicht gelesen -->
+    <tr th:each="sm : ${smartmeters}">
+        <td>
+            <a th:href="@{/smartmeters/{id}(id=${sm.id})}"
+               th:text="${sm.id}"></a>
+        </td>
+        <td th:text="${sm.lastMeasurement != null ? sm.lastMeasurement.measurement : 'N/A'}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

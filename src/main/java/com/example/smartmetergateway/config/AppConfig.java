@@ -1,0 +1,18 @@
+package com.example.smartmetergateway.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+@Configuration
+@EnableJpaAuditing // aktiviert das Auditing für JPA-Repositories, sodass die Auditing-Informationen automatisch in die Datenbank geschrieben werden
+@EnableJpaRepositories(basePackages = "com.example.smartmetergateway.repositiories") // aktiviert die JPA-Repositories und ermöglicht den Zugriff auf die Datenbank, ohne die Implementierung selbst schreiben zu müssen
+public class AppConfig {
+
+    @Bean
+    public AuditorAware<String> auditorProvider() { // gibt eine Instanz des SmartMeterAuditorAware zurück, die den aktuellen Benutzer für das Auditing bereitstellt
+        return new SmartMeterAuditorAware();
+    }
+}

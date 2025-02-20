@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smartmeter Details</title>
+</head>
+<body>
+<h1>Smartmeter ID: <span th:text="${smartmeter.id}"></span></h1>
+
+<h2>All Measurements</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Value</th>
+    <th>Created At</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="m : ${smartmeter.measurements}">
+    <td th:text="${m.id}"></td>
+    <td th:text="${m.measurement}"></td>
+    <td th:text="${m.createdAt}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<h3>Add New Measurement</h3>
+<form th:action="@{/smartmeters/{id}/measurements(id=${smartmeter.id})}" th:object="${newMeasurement}" method="post">
+  <label for="measurement">Value:</label>
+  <input id="measurement" type="number" step="1" th:field="*{measurement}" />
+  <button type="submit">Create</button>
+</form>
+</body>
+</html>
