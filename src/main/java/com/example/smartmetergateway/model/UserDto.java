@@ -15,15 +15,18 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserDto implements Serializable {
 
+    // Username darf nicht leer sein und muss mindestens acht Zeichen lang sein.
     @Size(message = "Username must contain at least eight characters", min = 8)
     @NotBlank(message = "Username must be set")
     private String username;
 
+    // Passwort darf nicht leer sein und muss mindestens acht Zeichen lang sein.
     @Size(message = "Password must contain at least eight characters", min = 8)
     @NotBlank(message = "Password must be set")
     private String password;
 
+    // Passwort darf nicht leer sein und muss mindestens acht Zeichen lang sein.
     @Size(message = "Password must contain at least eight characters", min = 8)
-    @NotBlank(message = "Password must be set")
+    @NotBlank(message = "Password must be confirmed")
     private String confirmPassword;
 }
