@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
+// Repräsentiert einen Benutzer der Anwendung, der Smart Meter besitzen und verwalten kann.
 @Getter
 @Setter
 @Entity
@@ -27,7 +28,7 @@ public class SmartMeterUser {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = false;
 
-    @ManyToMany(mappedBy = "smartMeterUsers")
+    @ManyToMany(mappedBy = "smartMeterUsers") // Konfiguration der Beziehung in der Authority-Klasse.
     private Set<Authority> authorities = new LinkedHashSet<>();
 
     @Override
