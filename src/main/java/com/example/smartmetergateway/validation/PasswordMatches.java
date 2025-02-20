@@ -11,12 +11,18 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({TYPE,ANNOTATION_TYPE})
-@Retention(RUNTIME)
-@Constraint(validatedBy = PasswordMatchesValidator.class)
+/*
+Dient dazu, eingegebene Passwörter zu validieren.
+Die Annotation bietet Standard-Fehlermeldungen sowie optionale Felder für Validierungsgruppen und zusätzliche Payloads, was sie in komplexeren Validierungsszenarien einsetzbar macht.
+ */
+@Target({TYPE, ANNOTATION_TYPE})
+@Retention(RUNTIME) // Annotation wird zur Laufzeit verwendet
+@Constraint(validatedBy = PasswordMatchesValidator.class) // Klasse, die die Validierung durchführt
 @Documented
 public @interface PasswordMatches {
     String message() default "Passwords don't match";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
