@@ -10,13 +10,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface SmartMeterMapper {
 
-//    @Mapping(target = "lastMeasurement", ignore = true)
+    @Mapping(target = "lastMeasurement", ignore = true)
 SmartMeterDto toSmartMeterDto(SmartMeter smartMeter);
 
     MeasurementDto toMeasurementDto(Measurement measurement);
 
-//    @Mapping(target = "id", ignore = true)
-//    @Mapping(target = "user", ignore = true)
-//    @Mapping(target = "measurements", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "measurements", ignore = true)
     SmartMeter toSmartMeterEntity(SmartMeterDto smartMeterDto);
 }

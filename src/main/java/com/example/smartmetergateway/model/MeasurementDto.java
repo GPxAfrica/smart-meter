@@ -21,5 +21,5 @@ public class MeasurementDto implements Serializable {
     private Long id;
     private Long measurement;
     private LocalDateTime createdAt;
-    private User createdBy;
+    private String createdBy;
 }
