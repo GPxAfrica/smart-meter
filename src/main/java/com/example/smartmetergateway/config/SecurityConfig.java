@@ -8,17 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.sql.DataSource;
-import javax.swing.*;
 
 @Configuration
 public class SecurityConfig {
@@ -36,6 +29,7 @@ public class SecurityConfig {
                 .formLogin(req -> req
                         .loginPage("/login").permitAll()) // das Login-Formular unter "/login" wird für alle freigegeben
                 .logout(logout -> logout.permitAll()) // auch der Logout ist für jeden zugänglich
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure()) // alle Requests erfordern eine sichere Verbindung
                 .build();
     }
 

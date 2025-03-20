@@ -2,7 +2,10 @@ package com.example.smartmetergateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 
+// Lädt die Konfigurationseigenschaften für die Sicherheit aus der Datei security.properties. Der Key muss auf den Ordner zeigen, in dem die Datei liegt.
+@PropertySource("file:${security.config.location}/security.properties")
 @SpringBootApplication
 public class SmartMeterGatewayApplication {
 
