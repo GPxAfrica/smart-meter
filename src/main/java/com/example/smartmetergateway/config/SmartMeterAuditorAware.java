@@ -16,11 +16,16 @@ public class SmartMeterAuditorAware implements AuditorAware<String> { // Integra
      */
     @Override
     public Optional<String> getCurrentAuditor() {
-        return Optional.ofNullable(SecurityContextHolder.getContext())
+        Optional<Object> principal = Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
-                .map(Authentication::getPrincipal)
-                .map(User.class::cast) // TODO: ClassCastException fangen?
-                .map(User::getUsername);
+                .map(Authentication::getPrincipal);
+        try {
+            return principal
+                    .map(User.class::cast)
+                    .map(User::getUsername);
+        } catch (ClassCastException e) { // Wenn der Typ der Authentifizierung nicht User ist, wird ein leerer Optional zurückgegeben.
+            return Optional.empty();
+        }
     }
 }

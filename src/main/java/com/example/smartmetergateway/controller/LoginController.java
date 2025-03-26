@@ -43,9 +43,10 @@ public class LoginController {
     }
 
     /*
+    TODO: Registration löschen und drei Nutzer statisch anlegen
     Verarbeitung der POST Anfragen auf "/registration", um einen neuen Benutzer zu registrieren.
     Die Benutzereingaben werden validiert und wenn die Validierung fehlschlägt, wird die registration.html Seite erneut zurückgegeben, um den Registrierungsprozess erneut zu starten.
-    TODO: wo wird die Validierung definiert? Also was als ok gilt und was nicht?
+    Die Validierung findet in der UserDto Klasse statt, die die Validierungskriterien für die Benutzereingaben enthält.
     Wenn die Validierung erfolgreich ist, wird ein neuer Benutzer erstellt und in der Datenbank gespeichert, sofern der Benutzer noch nicht existiert.
     Das eingegebene Passwort wird mit einem Salt versehen und gehasht gespeichert, wodurch das Passwort vor Rainbow-Table-Angriffen geschützt wird.
     Anschließend wird TODO: was angezeigt?
@@ -65,6 +66,6 @@ public class LoginController {
             newSmartMeterUser.setEnabled(true);
             userRepository.save(newSmartMeterUser);
         }
-        return "registration"; // TODO: Hier sollte eine Erfolgsmeldung ausgegeben werden und ggf. eine Weiterleitung auf die Login-Seite erfolgen
+        return "login"; // TODO: Hier sollte eine Erfolgsmeldung ausgegeben werden und ggf. eine Weiterleitung auf die Login-Seite erfolgen
     }
 }

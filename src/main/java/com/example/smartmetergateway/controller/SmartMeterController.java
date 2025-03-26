@@ -51,6 +51,7 @@ public class SmartMeterController {
     }
 
     /*
+    TODO: Smartmeter statisch erstellen und das hier löschen
     Neuen Smart Meter erstellen.
     Dafür wird der aktuell angemeldete Benutzer aus dem Authentication Objekt extrahiert und anhand des Benutzernamens aus der Datenbank geladen.
     Anschließend wird das SmartMeterDto Objekt in ein SmartMeter Entity Objekt gemappt und dem Benutzer zugeordnet.
