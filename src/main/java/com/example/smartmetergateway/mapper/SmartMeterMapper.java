@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 public interface SmartMeterMapper {
 
     @Mapping(target = "lastMeasurement", ignore = true)
-SmartMeterDto toSmartMeterDto(SmartMeter smartMeter);
+    SmartMeterDto toSmartMeterDto(SmartMeter smartMeter);
 
     MeasurementDto toMeasurementDto(Measurement measurement);
 

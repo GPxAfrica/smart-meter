@@ -3,6 +3,7 @@ package com.example.smartmetergateway.controller;
 import com.example.smartmetergateway.entities.Measurement;
 import com.example.smartmetergateway.entities.SmartMeter;
 import com.example.smartmetergateway.entities.SmartMeterUser;
+import com.example.smartmetergateway.model.MeasurementDto;
 import com.example.smartmetergateway.repositiories.SmartMeterRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -16,13 +17,17 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -53,6 +58,32 @@ class SmartMeterControllerTest {
                 .andExpect(model().attribute("smartmeters", hasSize(1)));
     }
 
+    @WithMockUser("user")
+    @Test
+    void whenUserAddsLowerMeasurementThanLastMeasurementThenReturnBadRequest() throws Exception {
+        SmartMeterUser smartMeterUser = new SmartMeterUser();
+        when(userRepository.findByUsername(eq("user"))).thenReturn(Optional.of(smartMeterUser));
+        SmartMeter smartMeter = new SmartMeter();
+        List<Measurement> measurements = new ArrayList<>();
+        measurements.add(new Measurement().setMeasurement(9L));
+        smartMeter.setMeasurements(measurements);
+        smartMeter.setUser(smartMeterUser);
+        when(smartMeterRepository.findById(any())).thenReturn(Optional.of(smartMeter));
+        MeasurementDto measurementDto = new MeasurementDto();
+        measurementDto.setMeasurement(8L);
+        mockMvc.perform(post("/smartmeters/1/measurements")
+                        .flashAttr("measurementDto", measurementDto)
+                        .secure(true)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("smartmeter-detail"))
+                .andExpect(model().attributeExists("errorMessage"))
+                .andExpect(model().attribute("errorMessage", SmartMeterController.ERR_LOWER_THAN_LAST));
+
+        verify(smartMeterRepository, never()).save(any(SmartMeter.class));
+
+    }
+
     @WithMockUser("guest")
     @Test
     void userShouldNotSeeForeignSmartmeters() throws Exception {
@@ -72,6 +103,7 @@ class SmartMeterControllerTest {
                 .andExpect(model().attributeExists("smartmeters"))
                 .andExpect(model().attribute("smartmeters", hasSize(0)));
     }
+
 
     @WithAnonymousUser
     @Test

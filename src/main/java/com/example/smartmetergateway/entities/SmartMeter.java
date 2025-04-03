@@ -28,7 +28,7 @@ public class SmartMeter {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "smartMeter") // Ein Messgerät kann mehrere Messwerte haben.
+    @OneToMany(mappedBy = "smartMeter", cascade = CascadeType.ALL) // Ein Messgerät kann mehrere Messwerte haben.
     @ToString.Exclude
     @OrderBy("createdAt ASC")
     private List<Measurement> measurements;

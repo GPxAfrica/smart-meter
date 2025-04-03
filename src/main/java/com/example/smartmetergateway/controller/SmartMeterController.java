@@ -1,20 +1,23 @@
 package com.example.smartmetergateway.controller;
 
+import com.example.smartmetergateway.entities.Measurement;
 import com.example.smartmetergateway.entities.SmartMeter;
 import com.example.smartmetergateway.entities.SmartMeterUser;
 import com.example.smartmetergateway.mapper.SmartMeterMapper;
+import com.example.smartmetergateway.model.MeasurementDto;
 import com.example.smartmetergateway.model.SmartMeterDto;
 import com.example.smartmetergateway.repositiories.SmartMeterRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 // Verwaltung der Endpunkte für die Smart Meter.
@@ -24,6 +27,7 @@ public class SmartMeterController {
     private final UserRepository userRepository;
     private final SmartMeterRepository smartMeterRepository;
     private final SmartMeterMapper smartMeterMapper;
+    public static final String ERR_LOWER_THAN_LAST = "New measurement cannot be lower than last measurement.";
 
     public SmartMeterController(UserRepository userRepository, SmartMeterRepository smartMeterRepository, SmartMeterMapper smartMeterMapper) {
         this.userRepository = userRepository;
@@ -66,4 +70,45 @@ public class SmartMeterController {
         smartMeterRepository.save(smartMeterEntity);
         return "redirect:/smartmeters";
     }
+
+    @GetMapping("/smartmeters/{id}")
+    public String getSmartMeter(@PathVariable Long id, Authentication authentication, Model model) {
+        User login = (User) authentication.getPrincipal();
+        SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
+        SmartMeter smartMeter = smartMeterRepository.findById(id).orElseThrow();
+        if (!smartMeter.getUser().equals(smartMeterUser)) {
+            return "403";
+        }
+        SmartMeterDto smartMeterDto = smartMeterMapper.toSmartMeterDto(smartMeter);
+
+        model.addAttribute("smartmeter", smartMeterDto);
+        model.addAttribute("newMeasurement", new MeasurementDto());
+        return "smartmeter-detail";
+    }
+
+    @PostMapping("/smartmeters/{id}/measurements")
+    public String postMeasurement(@PathVariable Long id, @ModelAttribute @Valid MeasurementDto measurementDto, Authentication authentication, Model model, HttpServletResponse httpServletResponse) {
+        User login = (User) authentication.getPrincipal();
+        SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
+        SmartMeter smartMeter = smartMeterRepository.findById(id).orElseThrow();
+        if (!smartMeter.getUser().equals(smartMeterUser)) {
+            return "403";
+        }
+        List<Measurement> measurements = smartMeter.getMeasurements();
+        if (measurements.getLast().getMeasurement().compareTo(measurementDto.getMeasurement()) > 0) {
+            model.addAttribute("smartmeter", smartMeterMapper.toSmartMeterDto(smartMeter));
+            model.addAttribute("newMeasurement", measurementDto);
+            model.addAttribute("errorMessage", ERR_LOWER_THAN_LAST);
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return "smartmeter-detail";
+        }
+        Measurement newMeasurement = new Measurement();
+        newMeasurement.setMeasurement(measurementDto.getMeasurement());
+        newMeasurement.setSmartMeter(smartMeter);
+
+        measurements.add(newMeasurement);
+        smartMeterRepository.save(smartMeter);
+        return "redirect:/smartmeters/" + id;
+    }
+
 }

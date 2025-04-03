@@ -21,12 +21,10 @@ public class LoginController {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final SmartMeterRepository smartMeterRepository;
 
-    public LoginController(UserRepository userRepository, PasswordEncoder passwordEncoder, SmartMeterRepository smartMeterRepository) {
+    public LoginController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.smartMeterRepository = smartMeterRepository;
     }
 
     // Bei GET Anfragen auf "/login", wird die login.html Seite zurückgegeben

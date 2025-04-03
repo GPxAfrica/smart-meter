@@ -1,5 +1,6 @@
 package com.example.smartmetergateway.model;
 
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
@@ -19,6 +20,7 @@ Dadurch werden Sicherheits- und Performanceaspekte verbessert, da nur die releva
 @NoArgsConstructor
 public class MeasurementDto implements Serializable {
     private Long id;
+    @Min(0)
     private Long measurement;
     private LocalDateTime createdAt;
     private String createdBy;

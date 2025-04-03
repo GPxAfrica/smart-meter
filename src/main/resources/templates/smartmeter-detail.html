@@ -11,7 +11,7 @@
 <table>
   <thead>
   <tr>
-    <th>ID</th>
+    <th>Measurement-ID</th>
     <th>Value</th>
     <th>Created At</th>
   </tr>
@@ -31,5 +31,10 @@
   <input id="measurement" type="number" step="1" th:field="*{measurement}" />
   <button type="submit">Create</button>
 </form>
+<div th:if="errorMessage != null">
+  <p th:text="${errorMessage}" style="color: #802d2d;"></p>
+</div>
+
+
 </body>
 </html>
