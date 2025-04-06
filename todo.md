@@ -6,3 +6,6 @@
   - [x] Maven Plugins für Secure Code Analyse
   - [ ] Unit Tests
 - [x] Härtung Tomcat nach CIS Benchmarks
+- [x] index.html
+- [ ] role operator alles sieht
+- [ ] access logs als contribution für secure coding

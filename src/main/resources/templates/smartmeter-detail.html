@@ -5,14 +5,14 @@
   <title>Smartmeter Details</title>
 </head>
 <body>
-<h1>Smartmeter ID: <span th:text="${smartmeter.id}"></span></h1>
+<h1>Smartmeter ID: <span th:text="${smartmeter.smartMeterId}"></span></h1>
 
 <h2>All Measurements</h2>
 <table>
   <thead>
   <tr>
-    <th>Measurement-ID</th>
-    <th>Value</th>
+    <th>Measurement ID</th>
+    <th>Measurement Value</th>
     <th>Created At</th>
   </tr>
   </thead>
@@ -26,7 +26,7 @@
 </table>
 
 <h3>Add New Measurement</h3>
-<form th:action="@{/smartmeters/{id}/measurements(id=${smartmeter.id})}" th:object="${newMeasurement}" method="post">
+<form th:action="@{/smartmeters/{id}/measurements(id=${smartmeter.smartMeterId})}" th:object="${newMeasurement}" method="post">
   <label for="measurement">Value:</label>
   <input id="measurement" type="number" step="1" th:field="*{measurement}" />
   <button type="submit">Create</button>

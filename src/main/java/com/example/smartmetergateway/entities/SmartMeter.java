@@ -2,6 +2,7 @@ package com.example.smartmetergateway.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,13 +17,14 @@ import java.util.Objects;
 @Table(name = "smart_meters")
 @Getter
 @Setter
+@Accessors(chain = true)
 @ToString
 @RequiredArgsConstructor
 public class SmartMeter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long smartMeterId;
 
     // Erstellungsdatum und -uhrzeit des Messgeräts, automatisch über die AuditingEntityListener-Klasse gesetzt.
     @CreatedDate
@@ -34,7 +36,8 @@ public class SmartMeter {
     private List<Measurement> measurements;
 
     @ManyToOne // Mehrere Messgeräte können einem Benutzer zugeordnet sein.
-    private SmartMeterUser user;
+    @JoinColumn(name = "owner_username")
+    private SmartMeterUser owner;
 
     @Override
     public final boolean equals(Object o) {
@@ -44,7 +47,7 @@ public class SmartMeter {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         SmartMeter that = (SmartMeter) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        return getSmartMeterId() != null && Objects.equals(getSmartMeterId(), that.getSmartMeterId());
     }
 
     @Override

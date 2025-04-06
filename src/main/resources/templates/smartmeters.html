@@ -9,18 +9,18 @@
 <table>
     <thead>
     <tr>
-        <th>ID</th>
+        <th>SmartMeter ID</th>
         <th>Last Measurement</th>
+        <th>Details</th>
     </tr>
     </thead>
     <tbody>
-    <!-- TODO: SmartMeters werden nicht gelesen -->
     <tr th:each="sm : ${smartmeters}">
-        <td>
-            <a th:href="@{/smartmeters/{id}(id=${sm.id})}"
-               th:text="${sm.id}"></a>
-        </td>
+        <td th:text="${sm.smartMeterId}"></td>
         <td th:text="${sm.lastMeasurement != null ? sm.lastMeasurement.measurement : 'N/A'}"></td>
+        <td>
+            <a th:href="@{/smartmeters/{id}(id=${sm.smartMeterId})}">View Details</a>
+        </td>
     </tr>
     </tbody>
 </table>

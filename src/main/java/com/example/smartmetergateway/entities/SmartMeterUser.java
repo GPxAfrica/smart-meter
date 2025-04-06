@@ -4,15 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 // Repräsentiert einen Benutzer der Anwendung, der Smart Meter besitzen und verwalten kann.
 @Getter
 @Setter
+@Accessors(chain = true)
 @Entity
 @Table(name = "users")
 public class SmartMeterUser {
@@ -27,6 +27,9 @@ public class SmartMeterUser {
     @NotNull
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = false;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    private List<SmartMeter> smartMeter = new ArrayList<>();
 
     @ManyToMany(mappedBy = "smartMeterUsers") // Konfiguration der Beziehung in der Authority-Klasse.
     private Set<Authority> authorities = new LinkedHashSet<>();

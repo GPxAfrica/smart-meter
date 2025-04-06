@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.proxy.HibernateProxy;
@@ -14,6 +15,7 @@ import java.util.Objects;
 // Repräsentiert eine Rolle (Zugriffsrecht), die einem Benutzer zugewiesen werden kann.
 @Getter
 @Setter
+@Accessors(chain = true)
 @Entity
 @Table(name = "authorities")
 public class Authority {
@@ -23,8 +25,7 @@ public class Authority {
     private String authority;
 
     // Definition einer Many-to-Many-Beziehung zwischen Authority und SmartMeterUser.
-    @NotNull
-    @ManyToMany(fetch = FetchType.LAZY) // FetchType.LAZY: Die Benutzer werden nur geladen, wenn sie explizit abgefragt werden. Dadurch wird die Leistung verbessert.
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) // FetchType.LAZY: Die Benutzer werden nur geladen, wenn sie explizit abgefragt werden. Dadurch wird die Leistung verbessert.
     @OnDelete(action = OnDeleteAction.RESTRICT) // OnDeleteAction.RESTRICT: Wenn versucht wird, eine Rolle zu löschen, die einem Benutzer zugewiesen ist, wird eine Ausnahme ausgelöst.
     @JoinTable(
             name = "user_authorities",

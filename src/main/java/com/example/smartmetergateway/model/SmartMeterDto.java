@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class SmartMeterDto implements Serializable {
-    private Long id;
+    private Long smartMeterId;
     private LocalDateTime createdAt;
     private List<MeasurementDto> measurements;
     private MeasurementDto lastMeasurement;

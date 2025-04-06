@@ -1,0 +1,22 @@
+<!-- This page is a beautiful HTML page that serves as the main entry point for the application. -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Smartmeter App</title>
+
+</head>
+
+<body>
+<h1>Welcome to the Smartmeter App</h1>
+<p>Use the navigation below to access different features of the application.</p>
+<nav>
+    <ul>
+        <li><a th:href="@{/smartmeters}">View All Smartmeters</a></li>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/registration}">Register</a></li>
+    </ul>
+</nav>
+<p>For more information, please refer to the documentation that does not exist.</p>
+</body>
+</html>

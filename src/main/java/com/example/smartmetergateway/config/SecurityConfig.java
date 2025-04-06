@@ -1,5 +1,7 @@
 package com.example.smartmetergateway.config;
 
+import com.example.smartmetergateway.config.props.SmartMeterOperator;
+import com.example.smartmetergateway.repositiories.AuthorityRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
 import com.example.smartmetergateway.services.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,8 +40,8 @@ public class SecurityConfig {
     userDetailService stellt eine zentrale Komponente in Spring Security dar, die dafür verantwortlich ist, Benutzerinformationen (wie Benutzernamen, Passwort und Rollen) zu laden.
      */
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new MyUserDetailsService(userRepository);
+    public UserDetailsService userDetailsService(UserRepository userRepository, SmartMeterOperator smartMeterOperator, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
+        return new MyUserDetailsService(userRepository, smartMeterOperator, authorityRepository, passwordEncoder);
     }
 
     // richtet den Authentifizierungsanbieter ein, der den UserDetailsService und den Argon2PasswordEncoder verwendet, um Anmeldedaten zu überprüfen.

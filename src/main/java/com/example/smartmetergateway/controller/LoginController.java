@@ -1,7 +1,10 @@
 package com.example.smartmetergateway.controller;
 
+import com.example.smartmetergateway.entities.Authority;
+import com.example.smartmetergateway.entities.SmartMeter;
 import com.example.smartmetergateway.entities.SmartMeterUser;
 import com.example.smartmetergateway.model.UserDto;
+import com.example.smartmetergateway.repositiories.AuthorityRepository;
 import com.example.smartmetergateway.repositiories.SmartMeterRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
 import jakarta.validation.Valid;
@@ -13,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 // Verwaltung der Login- und Registrierungsfunktionen
 @Controller
@@ -21,10 +26,12 @@ public class LoginController {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
 
-    public LoginController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public LoginController(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authorityRepository = authorityRepository;
     }
 
     // Bei GET Anfragen auf "/login", wird die login.html Seite zurückgegeben
@@ -62,8 +69,16 @@ public class LoginController {
             newSmartMeterUser.setPassword(passwordEncoder.encode(user.getPassword())); // Hier wird das Passwort gehasht und gesetzt
             // hier könnte noch ein MFA Token geprüft werden, aber aus Gründen der Einfachheit wird dieses weggelassen
             newSmartMeterUser.setEnabled(true);
+
+            Authority userAuthority = authorityRepository.findById("ROLE_USER").orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+            newSmartMeterUser.getAuthorities().add(userAuthority);
+            newSmartMeterUser.getSmartMeter().add(new SmartMeter().setOwner(newSmartMeterUser));
             userRepository.save(newSmartMeterUser);
+            return "login"; // TODO: Hier sollte eine Erfolgsmeldung ausgegeben werden und ggf. eine Weiterleitung auf die Login-Seite erfolgen
+        } else {
+            bindingResult.rejectValue("username", "error.user", "Username already exists");
+            model.addAttribute("user", user);
+            return "registration";
         }
-        return "login"; // TODO: Hier sollte eine Erfolgsmeldung ausgegeben werden und ggf. eine Weiterleitung auf die Login-Seite erfolgen
     }
 }

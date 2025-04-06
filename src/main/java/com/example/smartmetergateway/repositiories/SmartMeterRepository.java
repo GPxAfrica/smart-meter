@@ -20,5 +20,5 @@ public interface SmartMeterRepository extends JpaRepository<SmartMeter, Long> {
      Neben dem Sicherheitsaspekt wird auch die Lesbarkeit des Codes erhöht, da die Parameterbindung die Abfrage klarer strukturiert.
      Ein dritter Vorteil ist die verbesserte Performance, da die Datenbank die Abfrage wiederverwenden kann.
      */
-    List<SmartMeter> findByUser(SmartMeterUser user);
+    List<SmartMeter> findByOwner(SmartMeterUser owner);
 }

@@ -15,8 +15,8 @@ public interface SmartMeterMapper {
 
     MeasurementDto toMeasurementDto(Measurement measurement);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "smartMeterId", ignore = true)
+    @Mapping(target = "owner", ignore = true)
     @Mapping(target = "measurements", ignore = true)
     SmartMeter toSmartMeterEntity(SmartMeterDto smartMeterDto);
 }

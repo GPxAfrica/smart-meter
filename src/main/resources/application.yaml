@@ -26,7 +26,7 @@ server:
     enabled: true # CIS Benchmark Hardening Kapitel 6.2: Aktiviert TLS
     enabled-protocols: +TLSv1.2,+TLSv1.3
     key-store: classpath:keystore.p12
-#    key-store-password: # set via security.properties
+#    key-store-password: # via security.properties gesetzt
     key-store-type: PKCS12
     key-alias: smart-meter-gateway
     # Ciphers aus der TR-02102-2 des BSI, Kapitel 3.3.1.1
@@ -44,3 +44,7 @@ management:
     web:
       exposure:
         include: "health" # ermöglicht lediglich den Zugriff auf den Health-Endpoint
+smartmeter:
+  operator:
+    username: operator
+#    password: via security.properties gesetzt

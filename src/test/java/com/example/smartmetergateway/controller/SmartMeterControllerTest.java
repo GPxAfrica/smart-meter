@@ -49,7 +49,7 @@ class SmartMeterControllerTest {
         when(userRepository.findByUsername(eq("user"))).thenReturn(Optional.of(smartMeterUser));
         SmartMeter smartMeter = new SmartMeter();
         smartMeter.setMeasurements(List.of(new Measurement()));
-        when(smartMeterRepository.findByUser(smartMeterUser)).thenReturn(List.of(smartMeter));
+        when(smartMeterRepository.findByOwner(smartMeterUser)).thenReturn(List.of(smartMeter));
 
         mockMvc.perform(get("/smartmeters").secure(true))
                 .andExpect(status().isOk())
@@ -94,8 +94,8 @@ class SmartMeterControllerTest {
         when(userRepository.findByUsername(eq("user"))).thenReturn(Optional.of(smartMeterUserUser));
         SmartMeter smartMeter = new SmartMeter();
         smartMeter.setMeasurements(List.of(new Measurement()));
-        when(smartMeterRepository.findByUser(smartMeterUserUser)).thenReturn(List.of(smartMeter));
-        when(smartMeterRepository.findByUser(smartMeterUserGuest)).thenReturn(List.of());
+        when(smartMeterRepository.findByOwner(smartMeterUserUser)).thenReturn(List.of(smartMeter));
+        when(smartMeterRepository.findByOwner(smartMeterUserGuest)).thenReturn(List.of());
 
         mockMvc.perform(get("/smartmeters").secure(true))
                 .andExpect(status().isOk())

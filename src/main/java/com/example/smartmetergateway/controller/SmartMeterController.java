@@ -10,14 +10,12 @@ import com.example.smartmetergateway.repositiories.SmartMeterRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 // Verwaltung der Endpunkte für die Smart Meter.
@@ -44,10 +42,12 @@ public class SmartMeterController {
     public String getSmartMeters(Authentication authentication, Model model) {
         User login = (User) authentication.getPrincipal();
         SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
-        List<SmartMeter> smartMeters = smartMeterRepository.findByUser(smartMeterUser);
+        List<SmartMeter> smartMeters = smartMeterRepository.findByOwner(smartMeterUser);
         List<SmartMeterDto> smartMeterDtos = smartMeters.stream().map(smartMeter -> {
             SmartMeterDto smartMeterDto = smartMeterMapper.toSmartMeterDto(smartMeter);
-            smartMeterDto.setLastMeasurement(smartMeterMapper.toMeasurementDto(smartMeter.getMeasurements().getLast()));
+            if (!smartMeter.getMeasurements().isEmpty()) {
+                smartMeterDto.setLastMeasurement(smartMeterMapper.toMeasurementDto(smartMeter.getMeasurements().getLast()));
+            }
             return smartMeterDto;
         }).toList();
         model.addAttribute("smartmeters", smartMeterDtos);
@@ -66,7 +66,7 @@ public class SmartMeterController {
         User login = (User) authentication.getPrincipal();
         SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
         SmartMeter smartMeterEntity = smartMeterMapper.toSmartMeterEntity(smartMeterDto);
-        smartMeterEntity.setUser(smartMeterUser);
+        smartMeterEntity.setOwner(smartMeterUser);
         smartMeterRepository.save(smartMeterEntity);
         return "redirect:/smartmeters";
     }
@@ -76,7 +76,7 @@ public class SmartMeterController {
         User login = (User) authentication.getPrincipal();
         SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
         SmartMeter smartMeter = smartMeterRepository.findById(id).orElseThrow();
-        if (!smartMeter.getUser().equals(smartMeterUser)) {
+        if (!smartMeter.getOwner().equals(smartMeterUser)) {
             return "403";
         }
         SmartMeterDto smartMeterDto = smartMeterMapper.toSmartMeterDto(smartMeter);
@@ -91,11 +91,11 @@ public class SmartMeterController {
         User login = (User) authentication.getPrincipal();
         SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
         SmartMeter smartMeter = smartMeterRepository.findById(id).orElseThrow();
-        if (!smartMeter.getUser().equals(smartMeterUser)) {
+        if (!smartMeter.getOwner().equals(smartMeterUser)) {
             return "403";
         }
         List<Measurement> measurements = smartMeter.getMeasurements();
-        if (measurements.getLast().getMeasurement().compareTo(measurementDto.getMeasurement()) > 0) {
+        if (!measurements.isEmpty() && measurements.getLast().getMeasurement().compareTo(measurementDto.getMeasurement()) > 0) {
             model.addAttribute("smartmeter", smartMeterMapper.toSmartMeterDto(smartMeter));
             model.addAttribute("newMeasurement", measurementDto);
             model.addAttribute("errorMessage", ERR_LOWER_THAN_LAST);
