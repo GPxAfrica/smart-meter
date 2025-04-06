@@ -48,13 +48,12 @@ public class LoginController {
     }
 
     /*
-    TODO: Registration löschen und drei Nutzer statisch anlegen
     Verarbeitung der POST Anfragen auf "/registration", um einen neuen Benutzer zu registrieren.
     Die Benutzereingaben werden validiert und wenn die Validierung fehlschlägt, wird die registration.html Seite erneut zurückgegeben, um den Registrierungsprozess erneut zu starten.
     Die Validierung findet in der UserDto Klasse statt, die die Validierungskriterien für die Benutzereingaben enthält.
     Wenn die Validierung erfolgreich ist, wird ein neuer Benutzer erstellt und in der Datenbank gespeichert, sofern der Benutzer noch nicht existiert.
     Das eingegebene Passwort wird mit einem Salt versehen und gehasht gespeichert, wodurch das Passwort vor Rainbow-Table-Angriffen geschützt wird.
-    Anschließend wird TODO: was angezeigt?
+    Anschließend wird der Benutzer auf die Login-Seite weitergeleitet inklusive Erfolgsmeldung.
      */
     @PostMapping("/registration")
     String postRegistration(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult, Model model) {
@@ -74,7 +73,8 @@ public class LoginController {
             newSmartMeterUser.getAuthorities().add(userAuthority);
             newSmartMeterUser.getSmartMeter().add(new SmartMeter().setOwner(newSmartMeterUser));
             userRepository.save(newSmartMeterUser);
-            return "login"; // TODO: Hier sollte eine Erfolgsmeldung ausgegeben werden und ggf. eine Weiterleitung auf die Login-Seite erfolgen
+            model.addAttribute("message", "Registration successful! You can now log in.");
+            return "login";
         } else {
             bindingResult.rejectValue("username", "error.user", "Username already exists");
             model.addAttribute("user", user);

@@ -11,6 +11,7 @@
     <tr>
         <th>SmartMeter ID</th>
         <th>Last Measurement</th>
+        <th>Owner</th>
         <th>Details</th>
     </tr>
     </thead>
@@ -18,6 +19,7 @@
     <tr th:each="sm : ${smartmeters}">
         <td th:text="${sm.smartMeterId}"></td>
         <td th:text="${sm.lastMeasurement != null ? sm.lastMeasurement.measurement : 'N/A'}"></td>
+        <td th:text="${sm.owner != null ? sm.owner : 'N/A'}"></td>
         <td>
             <a th:href="@{/smartmeters/{id}(id=${sm.smartMeterId})}">View Details</a>
         </td>

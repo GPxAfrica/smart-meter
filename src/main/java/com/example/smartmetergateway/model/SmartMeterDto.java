@@ -18,4 +18,5 @@ public class SmartMeterDto implements Serializable {
     private LocalDateTime createdAt;
     private List<MeasurementDto> measurements;
     private MeasurementDto lastMeasurement;
+    private String owner;
 }

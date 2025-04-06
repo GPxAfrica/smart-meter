@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>Smartmeter Details</title>
+    <meta charset="UTF-8"/>
+    <title>Smartmeter Details</title>
 </head>
 <body>
 <h1>Smartmeter ID: <span th:text="${smartmeter.smartMeterId}"></span></h1>
+<h3>Owner: <span th:text="${smartmeter.owner != null ? smartmeter.owner : 'N/A'}"></span></h3>
 
 <h2>All Measurements</h2>
 <table>
-  <thead>
-  <tr>
-    <th>Measurement ID</th>
-    <th>Measurement Value</th>
-    <th>Created At</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="m : ${smartmeter.measurements}">
-    <td th:text="${m.id}"></td>
-    <td th:text="${m.measurement}"></td>
-    <td th:text="${m.createdAt}"></td>
-  </tr>
-  </tbody>
+    <thead>
+    <tr>
+        <th>Measurement ID</th>
+        <th>Measurement Value</th>
+        <th>Created At</th>
+        <th>Created By</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="m : ${smartmeter.measurements}">
+        <td th:text="${m.id}"></td>
+        <td th:text="${m.measurement}"></td>
+        <td th:text="${m.createdAt}"></td>
+        <td th:text="${m.createdBy}"></td>
+    </tr>
+    </tbody>
 </table>
 
 <h3>Add New Measurement</h3>
-<form th:action="@{/smartmeters/{id}/measurements(id=${smartmeter.smartMeterId})}" th:object="${newMeasurement}" method="post">
-  <label for="measurement">Value:</label>
-  <input id="measurement" type="number" step="1" th:field="*{measurement}" />
-  <button type="submit">Create</button>
+<form th:action="@{/smartmeters/{id}/measurements(id=${smartmeter.smartMeterId})}" th:object="${newMeasurement}"
+      method="post">
+    <label for="measurement">Value:</label>
+    <input id="measurement" type="number" step="1" th:field="*{measurement}"/>
+    <button type="submit">Create</button>
 </form>
 <div th:if="errorMessage != null">
-  <p th:text="${errorMessage}" style="color: #802d2d;"></p>
+    <p th:text="${errorMessage}" style="color: #802d2d;"></p>
 </div>
 
+<a th:href="@{/smartmeters}">View All Smartmeters</a>
 
 </body>
 </html>

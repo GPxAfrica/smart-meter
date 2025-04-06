@@ -9,6 +9,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate.enable_lazy_load_no_trans: true
   web:
     security:
       debug: false

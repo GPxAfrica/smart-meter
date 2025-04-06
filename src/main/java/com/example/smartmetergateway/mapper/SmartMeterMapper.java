@@ -11,12 +11,8 @@ import org.mapstruct.Mapping;
 public interface SmartMeterMapper {
 
     @Mapping(target = "lastMeasurement", ignore = true)
+    @Mapping(target = "owner", source = "owner.username")
     SmartMeterDto toSmartMeterDto(SmartMeter smartMeter);
 
     MeasurementDto toMeasurementDto(Measurement measurement);
-
-    @Mapping(target = "smartMeterId", ignore = true)
-    @Mapping(target = "owner", ignore = true)
-    @Mapping(target = "measurements", ignore = true)
-    SmartMeter toSmartMeterEntity(SmartMeterDto smartMeterDto);
 }

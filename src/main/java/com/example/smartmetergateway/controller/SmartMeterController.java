@@ -11,10 +11,15 @@ import com.example.smartmetergateway.repositiories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -41,8 +46,14 @@ public class SmartMeterController {
     @GetMapping("/smartmeters")
     public String getSmartMeters(Authentication authentication, Model model) {
         User login = (User) authentication.getPrincipal();
-        SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
-        List<SmartMeter> smartMeters = smartMeterRepository.findByOwner(smartMeterUser);
+        List<SmartMeter> smartMeters;
+        // Wenn der Benutzer ein Operator ist, werden alle SmartMeter geladen.
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_OPERATOR"))) {
+            smartMeters = smartMeterRepository.findAll();
+        } else { // Wenn der Benutzer kein Operator ist, werden nur die SmartMeter des Benutzers geladen.
+            SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
+            smartMeters = smartMeterUser.getSmartMeter();
+        }
         List<SmartMeterDto> smartMeterDtos = smartMeters.stream().map(smartMeter -> {
             SmartMeterDto smartMeterDto = smartMeterMapper.toSmartMeterDto(smartMeter);
             if (!smartMeter.getMeasurements().isEmpty()) {
@@ -54,30 +65,16 @@ public class SmartMeterController {
         return "smartmeters";
     }
 
-    /*
-    TODO: Smartmeter statisch erstellen und das hier löschen
-    Neuen Smart Meter erstellen.
-    Dafür wird der aktuell angemeldete Benutzer aus dem Authentication Objekt extrahiert und anhand des Benutzernamens aus der Datenbank geladen.
-    Anschließend wird das SmartMeterDto Objekt in ein SmartMeter Entity Objekt gemappt und dem Benutzer zugeordnet.
-    Das SmartMeter Entity Objekt wird in der Datenbank gespeichert und der Benutzer wird auf die SmartMeter Übersichtsseite weitergeleitet, wo der neu erstellte Smart Meter angezeigt wird.
-     */
-    @PostMapping("/smartmeters")
-    public String postCreateSmartMeter(Authentication authentication, @ModelAttribute @Valid SmartMeterDto smartMeterDto) {
-        User login = (User) authentication.getPrincipal();
-        SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
-        SmartMeter smartMeterEntity = smartMeterMapper.toSmartMeterEntity(smartMeterDto);
-        smartMeterEntity.setOwner(smartMeterUser);
-        smartMeterRepository.save(smartMeterEntity);
-        return "redirect:/smartmeters";
-    }
-
     @GetMapping("/smartmeters/{id}")
     public String getSmartMeter(@PathVariable Long id, Authentication authentication, Model model) {
         User login = (User) authentication.getPrincipal();
-        SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
         SmartMeter smartMeter = smartMeterRepository.findById(id).orElseThrow();
-        if (!smartMeter.getOwner().equals(smartMeterUser)) {
-            return "403";
+        // Wenn der Benutzer kein Operator ist, wird überprüft, ob der SmartMeter dem Benutzer gehört.
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_OPERATOR"))) {
+            SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
+            if (!smartMeter.getOwner().equals(smartMeterUser)) {
+                return "403";
+            }
         }
         SmartMeterDto smartMeterDto = smartMeterMapper.toSmartMeterDto(smartMeter);
 
@@ -87,12 +84,24 @@ public class SmartMeterController {
     }
 
     @PostMapping("/smartmeters/{id}/measurements")
-    public String postMeasurement(@PathVariable Long id, @ModelAttribute @Valid MeasurementDto measurementDto, Authentication authentication, Model model, HttpServletResponse httpServletResponse) {
-        User login = (User) authentication.getPrincipal();
-        SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
+    public String postMeasurement(@PathVariable Long id, @ModelAttribute @Valid MeasurementDto measurementDto, BindingResult bindingResult, Authentication authentication, Model model, HttpServletResponse httpServletResponse) {
         SmartMeter smartMeter = smartMeterRepository.findById(id).orElseThrow();
-        if (!smartMeter.getOwner().equals(smartMeterUser)) {
-            return "403";
+        User login = (User) authentication.getPrincipal();
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_OPERATOR"))) {
+            SmartMeterUser smartMeterUser = userRepository.findByUsername(login.getUsername()).orElseThrow();
+            if (!smartMeter.getOwner().equals(smartMeterUser)) {
+                return "403";
+            }
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("smartmeter", smartMeterMapper.toSmartMeterDto(smartMeter));
+            model.addAttribute("newMeasurement", measurementDto);
+            if (bindingResult.getFieldError() == null) {
+                model.addAttribute("errorMessage", "Unknown error");
+            } else {
+                model.addAttribute("errorMessage", bindingResult.getFieldError().getDefaultMessage());
+            }
+            return "smartmeter-detail";
         }
         List<Measurement> measurements = smartMeter.getMeasurements();
         if (!measurements.isEmpty() && measurements.getLast().getMeasurement().compareTo(measurementDto.getMeasurement()) > 0) {

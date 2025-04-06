@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,7 +32,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
-@SpringBootTest()
+@SpringBootTest
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class SmartMeterControllerTest {
 
@@ -49,7 +51,7 @@ class SmartMeterControllerTest {
         when(userRepository.findByUsername(eq("user"))).thenReturn(Optional.of(smartMeterUser));
         SmartMeter smartMeter = new SmartMeter();
         smartMeter.setMeasurements(List.of(new Measurement()));
-        when(smartMeterRepository.findByOwner(smartMeterUser)).thenReturn(List.of(smartMeter));
+        smartMeterUser.getSmartMeter().add(smartMeter);
 
         mockMvc.perform(get("/smartmeters").secure(true))
                 .andExpect(status().isOk())
@@ -67,7 +69,7 @@ class SmartMeterControllerTest {
         List<Measurement> measurements = new ArrayList<>();
         measurements.add(new Measurement().setMeasurement(9L));
         smartMeter.setMeasurements(measurements);
-        smartMeter.setUser(smartMeterUser);
+        smartMeter.setOwner(smartMeterUser);
         when(smartMeterRepository.findById(any())).thenReturn(Optional.of(smartMeter));
         MeasurementDto measurementDto = new MeasurementDto();
         measurementDto.setMeasurement(8L);
@@ -102,6 +104,24 @@ class SmartMeterControllerTest {
                 .andExpect(view().name("smartmeters"))
                 .andExpect(model().attributeExists("smartmeters"))
                 .andExpect(model().attribute("smartmeters", hasSize(0)));
+    }
+
+    @WithMockUser(value = "operator", authorities = "ROLE_OPERATOR")
+    @Test
+    void whenOperatorGetsSmartmetersReturnAllSmartmeters() throws Exception {
+        SmartMeterUser smartMeterUser = new SmartMeterUser();
+        when(userRepository.findByUsername(eq("operator"))).thenReturn(Optional.of(smartMeterUser));
+        SmartMeter smartMeter = new SmartMeter();
+        smartMeter.setMeasurements(List.of(new Measurement()));
+        when(smartMeterRepository.findAll()).thenReturn(List.of(smartMeter, smartMeter));
+
+        mockMvc.perform(get("/smartmeters").secure(true))
+                .andExpect(status().isOk())
+                .andExpect(view().name("smartmeters"))
+                .andExpect(model().attributeExists("smartmeters"))
+                .andExpect(model().attribute("smartmeters", hasSize(2)));
+
+        verify(smartMeterRepository, times(1)).findAll();
     }
 
 

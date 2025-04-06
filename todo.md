@@ -2,10 +2,11 @@
 - [x] SSL/TLS einbinden
   - [x] Zertifikate erstellen
   - [ ] Browser braucht Zertifikat 
-- [ ] Pipeline
+- [x] Pipeline
   - [x] Maven Plugins für Secure Code Analyse
-  - [ ] Unit Tests
+  - [x] Unit Tests
 - [x] Härtung Tomcat nach CIS Benchmarks
 - [x] index.html
-- [ ] role operator alles sieht
+- [x] role operator alles sieht
 - [ ] access logs als contribution für secure coding
+- [ ] Logout
