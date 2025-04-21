@@ -5,6 +5,10 @@
     <title>All Smartmeters</title>
 </head>
 <body>
+<a th:href="@{/}" style="text-decoration: none; color: blue;">Go Back Home</a>
+<form th:action="@{/logout}" method="post" style="float: right; margin: 10px;">
+    <button type="submit" style="background: none; border: none; color: blue; cursor: pointer;">Logout</button>
+</form>
 <h1>All Smartmeters</h1>
 <table>
     <thead>

@@ -1,7 +1,11 @@
 package com.example.smartmetergateway.entities;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
@@ -20,6 +24,7 @@ import java.util.Objects;
 @Accessors(chain = true)
 @ToString
 @RequiredArgsConstructor
+@SuppressFBWarnings(value = "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS", justification = "Equals method specifically for hibernate proxies. Proxies differ from non proxy classes")
 public class Measurement {
 
     @Id

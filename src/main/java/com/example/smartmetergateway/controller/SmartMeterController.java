@@ -8,6 +8,7 @@ import com.example.smartmetergateway.model.MeasurementDto;
 import com.example.smartmetergateway.model.SmartMeterDto;
 import com.example.smartmetergateway.repositiories.SmartMeterRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
@@ -84,6 +85,7 @@ public class SmartMeterController {
     }
 
     @PostMapping("/smartmeters/{id}/measurements")
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Null check is done in the if statement before accessing the fieldError's defaultMessage")
     public String postMeasurement(@PathVariable Long id, @ModelAttribute @Valid MeasurementDto measurementDto, BindingResult bindingResult, Authentication authentication, Model model, HttpServletResponse httpServletResponse) {
         SmartMeter smartMeter = smartMeterRepository.findById(id).orElseThrow();
         User login = (User) authentication.getPrincipal();
@@ -96,7 +98,7 @@ public class SmartMeterController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("smartmeter", smartMeterMapper.toSmartMeterDto(smartMeter));
             model.addAttribute("newMeasurement", measurementDto);
-            if (bindingResult.getFieldError() == null) {
+            if (bindingResult.getFieldError() == null || bindingResult.getFieldError().getDefaultMessage() == null) {
                 model.addAttribute("errorMessage", "Unknown error");
             } else {
                 model.addAttribute("errorMessage", bindingResult.getFieldError().getDefaultMessage());

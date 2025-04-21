@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,8 +31,12 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()) // alle anderen Requests erfordern eine Authentifizierung TODO: make deny all
                 .formLogin(req -> req
                         .loginPage("/login").permitAll()) // das Login-Formular unter "/login" wird für alle freigegeben
-                .logout(logout -> logout.permitAll()) // auch der Logout ist für jeden zugänglich
+                .logout(logout -> {
+                    logout.permitAll();
+                    logout.logoutUrl("/logout");
+                }) // auch der Logout ist für jeden zugänglich
                 .requiresChannel(channel -> channel.anyRequest().requiresSecure()) // alle Requests erfordern eine sichere Verbindung
+                .csrf(Customizer.withDefaults()) // nutzt SessionRepository um valide CSRF-Token abzugleichen (Thymeleaf sendet hidden input field "_csrf" mit dem Token)
                 .build();
     }
 

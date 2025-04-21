@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,8 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 public class UserDto implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1318389307124649617L;
 
     // Username darf nicht leer sein und muss mindestens acht Zeichen lang sein.
     @Size(message = "Username must contain at least eight characters", min = 8)

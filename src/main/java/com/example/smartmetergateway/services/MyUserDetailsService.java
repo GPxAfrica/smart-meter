@@ -5,6 +5,7 @@ import com.example.smartmetergateway.entities.Authority;
 import com.example.smartmetergateway.entities.SmartMeterUser;
 import com.example.smartmetergateway.repositiories.AuthorityRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +37,7 @@ public class MyUserDetailsService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
+    @SuppressFBWarnings(value = {"UPM_UNCALLED_PRIVATE_METHOD", "DLS_DEAD_LOCAL_STORE"}, justification = "1: The method is called via reflection. 2: The return value is used to insert the roles once into the database")
     private void setupOperator() {
         if (smartMeterOperator.username() == null || smartMeterOperator.password() == null) {
             throw new IllegalArgumentException("SmartMeterOperator username and password must be set");

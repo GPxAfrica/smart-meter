@@ -8,5 +8,10 @@
 - [x] Härtung Tomcat nach CIS Benchmarks
 - [x] index.html
 - [x] role operator alles sieht
-- [ ] access logs als contribution für secure coding
-- [ ] Logout
+- [x] access logs als contribution für secure coding
+- [x] Logout
+- [x] Spotbugs bugs entfernen
+- [x] CSRF
+
+Last but not least:
+- [ ] Nochmal alle dependencies updaten

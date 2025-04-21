@@ -5,7 +5,6 @@ import com.example.smartmetergateway.entities.SmartMeter;
 import com.example.smartmetergateway.entities.SmartMeterUser;
 import com.example.smartmetergateway.model.UserDto;
 import com.example.smartmetergateway.repositiories.AuthorityRepository;
-import com.example.smartmetergateway.repositiories.SmartMeterRepository;
 import com.example.smartmetergateway.repositiories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 // Verwaltung der Login- und Registrierungsfunktionen
 @Controller

@@ -4,9 +4,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
-import org.springframework.security.core.userdetails.User;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -20,6 +19,10 @@ Dadurch werden Sicherheits- und Performanceaspekte verbessert, da nur die releva
 @Data
 @NoArgsConstructor
 public class MeasurementDto implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -8006828369172971705L;
+
     private Long id;
     @Min(value = 0, message = "Measurement must be greater than or equal to 0.")
     @NotNull(message = "Measurement cannot be null.")

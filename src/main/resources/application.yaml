@@ -39,6 +39,10 @@ server:
   tomcat:
     connection-timeout: 10s # CIS Benchmark Hardening Kapitel 10.9: Verhindert DoS-Angriffe
     max-http-response-header-size: 8KB # CIS Benchmark Hardening Kapitel 10.10: Verhindert DoS-Angriffe
+    accesslog:
+      enabled: true
+      directory: logs # Logging von HTTP-Zugriffen auf Endpoints der Smart Meter Gateway Applikation
+    basedir: tomcat
   max-http-request-header-size: 8KB # CIS Benchmark Hardening Kapitel 10.10: Verhindert DoS-Angriffe
   server-header: ~ # CIS Benchmark Hardening Kapitel 2.1 - 2.3; 2.7: Verhindert das Ausgeben von Serverinformationen
 management:

@@ -1,7 +1,7 @@
 package com.example.smartmetergateway.entities;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,6 +18,7 @@ import java.util.Objects;
 @Accessors(chain = true)
 @Entity
 @Table(name = "authorities")
+@SuppressFBWarnings(value = "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS", justification = "Equals method specifically for hibernate proxies. Proxies differ from non proxy classes")
 public class Authority {
 
     @Id

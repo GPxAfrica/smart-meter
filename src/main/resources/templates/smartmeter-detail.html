@@ -5,6 +5,10 @@
     <title>Smartmeter Details</title>
 </head>
 <body>
+<a th:href="@{/}" style="text-decoration: none; color: blue;">Go Back Home</a>
+<form th:action="@{/logout}" method="post" style="float: right; margin: 10px;">
+    <button type="submit" style="background: none; border: none; color: blue; cursor: pointer;">Logout</button>
+</form>
 <h1>Smartmeter ID: <span th:text="${smartmeter.smartMeterId}"></span></h1>
 <h3>Owner: <span th:text="${smartmeter.owner != null ? smartmeter.owner : 'N/A'}"></span></h3>
 
