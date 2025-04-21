@@ -17,7 +17,7 @@ import java.util.Objects;
 
 // Repräsentiert ein intelligentes Messgerät (Smart Meter), das einem Benutzer zugeordnet ist.
 @Entity
-@EntityListeners(AuditingEntityListener.class) // TODO: bei allen Entitäten hinzufügen?? Fehlt bei Authority und SmartMeterUser
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "smart_meters")
 @Getter
 @Setter

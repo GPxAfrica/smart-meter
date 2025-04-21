@@ -1,6 +1,7 @@
 package com.example.smartmetergateway.config;
 
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ public class SmartMeterAuditorAware implements AuditorAware<String> { // Integra
     Über das Authentication-Objekt wird der aktuelle Benutzer aus dem SecurityContext extrahiert und der Benutzername zurückgegeben.
      */
     @Override
+    @NonNull
     public Optional<String> getCurrentAuditor() {
         Optional<Object> principal = Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
@@ -24,7 +26,8 @@ public class SmartMeterAuditorAware implements AuditorAware<String> { // Integra
             return principal
                     .map(User.class::cast)
                     .map(User::getUsername);
-        } catch (ClassCastException e) { // Wenn der Typ der Authentifizierung nicht User ist, wird ein leerer Optional zurückgegeben.
+        } catch (
+                ClassCastException e) { // Wenn der Typ der Authentifizierung nicht User ist, wird ein leerer Optional zurückgegeben.
             return Optional.empty();
         }
     }

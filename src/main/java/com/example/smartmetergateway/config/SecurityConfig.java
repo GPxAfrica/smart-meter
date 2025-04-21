@@ -24,16 +24,18 @@ public class SecurityConfig {
 
     // erstellt und konfiguriert eine SecurityFilterChain, die alle HTTP-Anfragen der Anwendung verarbeitet und die definierten Sicherheitsregeln anwendet
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(
                         req -> req.requestMatchers("/registration").permitAll() // alle Requests auf "/registration" werden zugelassen
-                                .anyRequest().authenticated()) // alle anderen Requests erfordern eine Authentifizierung TODO: make deny all
+                                .requestMatchers("/").authenticated() // alle Requests auf "/" (index) erfordern eine Authentifizierung
+                                .requestMatchers("/smartmeters/**").authenticated() // alle Requests auf "/smartmeters" und Subpfade erfordern eine Authentifizierung
+                                .anyRequest().denyAll()) // deny by default für alle anderen Requests
                 .formLogin(req -> req
                         .loginPage("/login").permitAll()) // das Login-Formular unter "/login" wird für alle freigegeben
                 .logout(logout -> {
-                    logout.permitAll();
-                    logout.logoutUrl("/logout");
+                    logout.permitAll(); // Logout ist für alle zugänglich
+                    logout.logoutUrl("/logout"); // Logout-URL
                 }) // auch der Logout ist für jeden zugänglich
                 .requiresChannel(channel -> channel.anyRequest().requiresSecure()) // alle Requests erfordern eine sichere Verbindung
                 .csrf(Customizer.withDefaults()) // nutzt SessionRepository um valide CSRF-Token abzugleichen (Thymeleaf sendet hidden input field "_csrf" mit dem Token)

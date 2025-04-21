@@ -208,29 +208,6 @@
             </build>
         </profile>
         <profile>
-            <id>checkstyle</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <!-- Checkstyle ist ein statisches Code-Analyse-Tool, welches den Code auf Einhaltung von Coding-Standards überprüft -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.6.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>check-classpath</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
