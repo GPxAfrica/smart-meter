@@ -33,7 +33,7 @@ public class SmartMeterUser {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private List<SmartMeter> smartMeter = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "smartMeterUsers") // Konfiguration der Beziehung in der Authority-Klasse.
+    @ManyToMany(mappedBy = "smartMeterUsers", cascade = {CascadeType.MERGE, CascadeType.PERSIST}) // Konfiguration der Beziehung in der Authority-Klasse.
     private Set<Authority> authorities = new LinkedHashSet<>();
 
     @Override

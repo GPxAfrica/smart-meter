@@ -67,6 +67,7 @@ public class LoginController {
             newSmartMeterUser.setEnabled(true);
 
             Authority userAuthority = authorityRepository.findById("ROLE_USER").orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+            userAuthority.getSmartMeterUsers().add(newSmartMeterUser);
             newSmartMeterUser.getAuthorities().add(userAuthority);
             newSmartMeterUser.getSmartMeter().add(new SmartMeter().setOwner(newSmartMeterUser));
             userRepository.save(newSmartMeterUser);

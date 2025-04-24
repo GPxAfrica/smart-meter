@@ -11,6 +11,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate.enable_lazy_load_no_trans: true
+    open-in-view: false
   web:
     security:
       debug: false
@@ -20,6 +21,7 @@ spring:
 logging:
   level:
     org.springframework.security: INFO
+    org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR
 server:
   port: 443
   error:

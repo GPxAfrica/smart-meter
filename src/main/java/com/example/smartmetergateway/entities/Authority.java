@@ -26,7 +26,7 @@ public class Authority {
     private String authority;
 
     // Definition einer Many-to-Many-Beziehung zwischen Authority und SmartMeterUser.
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     // FetchType.LAZY: Die Benutzer werden nur geladen, wenn sie explizit abgefragt werden. Dadurch wird die Leistung verbessert.
     @OnDelete(action = OnDeleteAction.RESTRICT)
     // OnDeleteAction.RESTRICT: Wenn versucht wird, eine Rolle zu löschen, die einem Benutzer zugewiesen ist, wird eine Ausnahme ausgelöst.

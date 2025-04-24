@@ -62,9 +62,8 @@ public class MyUserDetailsService implements UserDetailsService {
             operator.setPassword(passwordEncoder.encode(smartMeterOperator.password()));
             operator.setEnabled(true);
             operator.setAuthorities(Set.of(operatorAuthority));
+            operatorAuthority.getSmartMeterUsers().add(operator);
             SmartMeterUser savedUser = userRepository.save(operator);
-            operatorAuthority.getSmartMeterUsers().add(savedUser);
-            authorityRepository.save(operatorAuthority);
         }
     }
 
