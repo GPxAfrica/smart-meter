@@ -1,6 +1,7 @@
 package com.example.smartmetergateway.model;
 
 import com.example.smartmetergateway.entities.SmartMeterUser;
+import com.example.smartmetergateway.validation.PasswordMatches;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
+@PasswordMatches
 public class UserDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1318389307124649617L;
@@ -28,8 +30,7 @@ public class UserDto implements Serializable {
     @NotBlank(message = "Password must be set")
     private String password;
 
-    // Passwort darf nicht leer sein und muss mindestens acht Zeichen lang sein.
-    @Size(message = "Password must contain at least eight characters", min = 8)
+    // Passwort darf nicht leer sein.
     @NotBlank(message = "Password must be confirmed")
     private String confirmPassword;
 }

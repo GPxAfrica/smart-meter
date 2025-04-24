@@ -21,7 +21,7 @@ logging:
   level:
     org.springframework.security: INFO
 server:
-  port: 8443
+  port: 443
   error:
     include-stacktrace: never # CIS Benchmark Hardening Kapitel 2.5: Verhindert das Ausgeben von Stacktraces im Response Body
   ssl:

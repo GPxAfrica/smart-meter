@@ -6,24 +6,21 @@
 <body>
 <h1>Please Sign Up</h1>
 <div th:if="${param.error}">
-    Invalid username and password.</div>
+    Invalid username and password.
+</div>
 <form th:action="@{/registration}" th:object="${user}" method="post">
     <div>
         <input type="text" th:field="*{username}" placeholder="Username"/>
-        <p th:each="error : ${#fields.errors('username')}"
-           th:text="${error}">Validation error</p>
     </div>
     <div>
         <input type="password" th:field="*{password}" placeholder="Password"/>
-        <p th:each="error : ${#fields.errors('password')}"
-           th:text="${error}">Validation error</p>
     </div>
     <div>
         <input type="password" th:field="*{confirmPassword}" placeholder="Confirm password"/>
-        <p th:each="error : ${#fields.errors('confirmPassword')}"
-           th:text="${error}">Validation error</p>
     </div>
-    <input type="submit" value="Register" />
+    <p th:each="error : ${#fields.errors}"
+       th:text="${error}">Validation error</p>
+    <input type="submit" value="Register"/>
 </form>
 <a href="/login">Already have an account? Log in!</a>
 </body>
