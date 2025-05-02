@@ -36,7 +36,6 @@ public class Authority {
             inverseJoinColumns = @JoinColumn(name = "username"))
     private List<SmartMeterUser> smartMeterUsers;
 
-    // Überschreibt die equals-Methode, um zwei Authority-Objekte zu vergleichen.
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -48,7 +47,6 @@ public class Authority {
         return getAuthority() != null && Objects.equals(getAuthority(), authority1.getAuthority());
     }
 
-    // Überschreibt die hashCode-Methode, um den Hash-Code eines Authority-Objekts zu berechnen.
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();

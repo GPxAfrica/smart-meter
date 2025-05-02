@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableConfigurationProperties(SmartMeterOperator.class)
-@EnableJpaAuditing
 // aktiviert das Auditing für JPA-Repositories, sodass die Auditing-Informationen automatisch in die Datenbank geschrieben werden
-@EnableJpaRepositories(basePackages = "com.example.smartmetergateway.repositiories")
+@EnableJpaAuditing
 // aktiviert die JPA-Repositories und ermöglicht den Zugriff auf die Datenbank, ohne die Implementierung selbst schreiben zu müssen
+@EnableJpaRepositories(basePackages = "com.example.smartmetergateway.repositiories")
 public class AppConfig {
 
     @Bean

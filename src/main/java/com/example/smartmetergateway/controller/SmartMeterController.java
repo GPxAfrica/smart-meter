@@ -66,6 +66,13 @@ public class SmartMeterController {
         return "smartmeters";
     }
 
+    /*
+    Smart Meter Details inklusive Messständen abrufen.
+    Dafür wird der SmartMeter anhand der ID aus der URL geladen und in ein SmartMeterDto Objekt gemappt.
+    Anschließend wird überprüft, ob der Benutzer ein Operator ist oder ob der SmartMeter dem Benutzer gehört (Operator hat Zugriff auf alle SmartMeter).
+    Wenn der SmartMeter dem Benutzer gehört, wird das SmartMeterDto Objekt an das Model übergeben und die Seite smartmeter-detail.html zurückgegeben.
+    Wenn der Benutzer kein Operator ist und der SmartMeter nicht dem Benutzer gehört, wird ein 403 Fehler zurückgegeben.
+     */
     @GetMapping("/smartmeters/{id}")
     public String getSmartMeter(@PathVariable Long id, Authentication authentication, Model model) {
         User login = (User) authentication.getPrincipal();
@@ -84,6 +91,13 @@ public class SmartMeterController {
         return "smartmeter-detail";
     }
 
+    /*
+    Neuen Messwert eintragen.
+    Dafür wird der SmartMeter anhand der ID aus der URL geladen.
+    Anschließend wird überprüft, ob der Benutzer ein Operator ist oder ob der SmartMeter dem Benutzer gehört (nur diese beiden Akteure dürfen neue Werte eingeben).
+    Zusätzlich findet eine Überprüfung statt, ob der neue Messwert kleiner ist als der vorherige, was zu einem Fehler führt.
+    Falls kein Fehler auftritt, wird neuer Messwert erstellt, dem Smart Meter hinzugefügt und auf der Oberfläche angezeigt.
+     */
     @PostMapping("/smartmeters/{id}/measurements")
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Null check is done in the if statement before accessing the fieldError's defaultMessage")
     public String postMeasurement(@PathVariable Long id, @ModelAttribute @Valid MeasurementDto measurementDto, BindingResult bindingResult, Authentication authentication, Model model, HttpServletResponse httpServletResponse) {
@@ -106,7 +120,7 @@ public class SmartMeterController {
             return "smartmeter-detail";
         }
         List<Measurement> measurements = smartMeter.getMeasurements();
-        if (!measurements.isEmpty() && measurements.getLast().getMeasurement().compareTo(measurementDto.getMeasurement()) > 0) {
+        if (!measurements.isEmpty() && measurements.getLast().getMeasurement().compareTo(measurementDto.getMeasurement()) > 0) { // neuer Messwert muss größer sein als vorheriger
             model.addAttribute("smartmeter", smartMeterMapper.toSmartMeterDto(smartMeter));
             model.addAttribute("newMeasurement", measurementDto);
             model.addAttribute("errorMessage", ERR_LOWER_THAN_LAST);
@@ -116,7 +130,6 @@ public class SmartMeterController {
         Measurement newMeasurement = new Measurement();
         newMeasurement.setMeasurement(measurementDto.getMeasurement());
         newMeasurement.setSmartMeter(smartMeter);
-
         measurements.add(newMeasurement);
         smartMeterRepository.save(smartMeter);
         return "redirect:/smartmeters/" + id;
