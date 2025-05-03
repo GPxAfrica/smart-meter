@@ -140,9 +140,4 @@ class SmartMeterControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("https://**/smartmeters"));
     }
-
-    @Test
-    void postCreateSmartMeter() {
-
-    }
 }
