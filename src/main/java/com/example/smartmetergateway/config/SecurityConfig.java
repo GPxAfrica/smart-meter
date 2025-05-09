@@ -60,10 +60,13 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    // Erstellung des Argon2PasswordEncoders mit spezifischen Parametern, um Passwörter sicher zu hashen und zu überprüfen.
+    /*
+    Erstellung des Argon2PasswordEncoders mit spezifischen Parametern, um Passwörter sicher zu hashen und zu überprüfen.
+    Durch die Nutzung eines Salts wird das Passwort vor Rainbow-Table-Angriffen geschützt
+    */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new Argon2PasswordEncoder(16, 32, 1, 65536, 3); // Durch die Nutzung eines Salts wird das Passwort vor Rainbow-Table-Angriffen geschützt
+        return new Argon2PasswordEncoder(16, 32, 1, 65536, 3);
     }
 
     // Steuerung der Debug-Ausgabe von Spring Security
